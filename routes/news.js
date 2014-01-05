@@ -42,24 +42,24 @@ exports.create = function(req, res) {
 
 var clients = [];
 
+var onWsConnClose = function(reasonCode, description) {
+	console.log('Peer disconnected with reason: ' + reasonCode);
+};
+
+var onWsRequest = function(request) {
+	console.log('WebSocket connect requested');
+
+	var connection = request.accept('echo-protocol', request.origin);
+
+	connection.on('close', onWsConnClose);
+
+	clients.push(connection);
+};
+	
 exports.websocket = function(req, res, next) {
 	var wsServer = req.app.ws;
 
 	if (wsServer === 'undefined') return;
-
-	var onWsConnClose = function(reasonCode, description) {
-		console.log('Peer disconnected with reason: ' + reasonCode);
-	};
-
-	var onWsRequest = function(request) {
-		console.log('WebSocket connect requested');
-
-		var connection = request.accept('echo-protocol', request.origin);
-
-		connection.on('close', onWsConnClose);
-
-		clients.push(connection);
-	};
 
 	wsServer.on('request', onWsRequest);
 

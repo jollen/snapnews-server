@@ -20,7 +20,9 @@
 
     ws.onmessage = function (message) {
       var json = JSON.parse(message.data);
-      $('#tmpl-news').tmpl(json).html( "#target" );    
+      var htmlCode = $('#tmpl-news').tmpl(json);
+      
+      $("#target").html(htmlCode);   
     };
   }
 })($);
