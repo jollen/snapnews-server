@@ -33,3 +33,23 @@ exports.create = function(req, res) {
 		console.log('Saved!');
 	});
 };
+
+var clients = [];
+
+exports.RequestWebSocket = function(req, res) {
+	var onWsConnClose = function(reasonCode, description) {
+		console.log('Peer disconnected with reason: ' + reasonCode);
+	};
+
+	var onWsRequest = function(request) {
+		console.log('WebSocket connect requested');
+
+		var connection = request.accept('echo-protocol', request.origin);
+
+		connection.on('close', onWsConnClose);
+
+		clients.push(connection);
+	};
+
+	wsServer.on('request', onWsRequest);
+}

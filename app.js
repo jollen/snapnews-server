@@ -30,6 +30,19 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+// ==============================
+//        WebSocket
+// ==============================
+var WebSocketServer = require('websocket').server;
+
+var wsServer = new WebSocketServer({
+	httpServer: httpServer,
+	autoAcceptConnection: false
+});
+
+// ==============================
+//        URL Routing
+// ==============================
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/hello', hello.index);
@@ -39,6 +52,7 @@ app.get('/news', news.index);
 app.post('/news', news.create);
 
 
-http.createServer(app).listen(app.get('port'), function(){
+var httpServer = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
