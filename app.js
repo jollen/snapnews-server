@@ -37,7 +37,7 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/hello', hello.index);
 
-// CRUD
+// CRUD & Middleware
 app.get('/news', news.websocket, news.index);
 app.post('/news', news.create);
 
@@ -55,3 +55,5 @@ app.ws = new WebSocketServer({
 	httpServer: httpServer,
 	autoAcceptConnection: false
 });
+
+app.ws.on('request', news.onWsRequest);

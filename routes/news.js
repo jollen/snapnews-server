@@ -43,10 +43,10 @@ exports.create = function(req, res) {
 var clients = [];
 
 var onWsConnClose = function(reasonCode, description) {
-	console.log('Peer disconnected with reason: ' + reasonCode);
+	console.log('Pexer disconnected with reason: ' + reasonCode);
 };
 
-var onWsRequest = function(request) {
+exports.onWsRequest = function(request) {
 	console.log('WebSocket connect requested');
 
 	var connection = request.accept('echo-protocol', request.origin);
@@ -55,13 +55,11 @@ var onWsRequest = function(request) {
 
 	clients.push(connection);
 };
-	
+
 exports.websocket = function(req, res, next) {
 	var wsServer = req.app.ws;
 
 	if (wsServer === 'undefined') return;
-
-	wsServer.on('request', onWsRequest);
 
 	next();
 }
