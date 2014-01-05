@@ -32,11 +32,21 @@ exports.create = function(req, res) {
 	fs.writeFile('./routes/db.json', JSON.stringify(history), function(err) {
 		console.log('Saved!');
 	});
+
+	for(i = 0; i < clients.length; i++) {
+		var client = clients[i];
+
+		client.sendUTF(JSON.stringify(history));
+	}
 };
 
 var clients = [];
 
-exports.RequestWebSocket = function(req, res) {
+exports.websocket = function(req, res, next) {
+	var wsServer = req.app.ws;
+
+	if (wsServer === 'undefined') return;
+
 	var onWsConnClose = function(reasonCode, description) {
 		console.log('Peer disconnected with reason: ' + reasonCode);
 	};
@@ -52,4 +62,6 @@ exports.RequestWebSocket = function(req, res) {
 	};
 
 	wsServer.on('request', onWsRequest);
+
+	next();
 }

@@ -31,16 +31,6 @@ if ('development' == app.get('env')) {
 }
 
 // ==============================
-//        WebSocket
-// ==============================
-var WebSocketServer = require('websocket').server;
-
-var wsServer = new WebSocketServer({
-	httpServer: httpServer,
-	autoAcceptConnection: false
-});
-
-// ==============================
 //        URL Routing
 // ==============================
 app.get('/', routes.index);
@@ -48,7 +38,7 @@ app.get('/users', user.list);
 app.get('/hello', hello.index);
 
 // CRUD
-app.get('/news', news.index);
+app.get('/news', news.websocket, news.index);
 app.post('/news', news.create);
 
 
@@ -56,3 +46,12 @@ var httpServer = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+// ==============================
+//        WebSocket
+// ==============================
+var WebSocketServer = require('websocket').server;
+
+app.ws = new WebSocketServer({
+	httpServer: httpServer,
+	autoAcceptConnection: false
+});
